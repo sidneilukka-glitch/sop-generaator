@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOP-generaator — töö üleandmise juhend</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1F2B47;--gold:#c5a880;--gold-d:#a3845b;--cream:#faf8f5;--sand:#f3eee3;--cta:#E89C30;--line:#e7e1d6;--muted:#6b7280;--green:#2f855a;--red:#c53030;--amber:#b7791f;--accent:#1F2B47}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--cream);color:var(--navy);font-size:15px;line-height:1.5}
+a{color:inherit}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;margin:0}
+button{font-family:inherit;cursor:pointer}
+.app{max-width:1100px;margin:0 auto;padding:0 20px 80px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .ic{width:42px;height:42px;border-radius:12px;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-size:20px}
+.brand b{display:block;font-size:17px}.brand small{color:var(--muted)}
+.topbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.save{font-size:12px;color:var(--muted);margin-right:6px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--navy);padding:9px 14px;border-radius:10px;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--gold)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{background:#2b3a5e}
+.btn.cta{background:var(--cta);border-color:var(--cta);color:#fff}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.sm{padding:6px 10px;font-size:13px}
+.btn.danger{color:var(--red)}
+.steps{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px;overflow-x:auto;margin-bottom:20px}
+.steps button{flex:1;min-width:110px;border:0;background:transparent;padding:8px 6px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.steps button .n{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:600;font-size:13px;background:#fff}
+.steps button.done .n{background:var(--gold);border-color:var(--gold);color:#fff}
+.steps button.active{background:var(--sand);color:var(--navy);font-weight:600}
+.steps button.active .n{background:var(--navy);border-color:var(--navy);color:#fff}
+.grid{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:30px}
+.card h2{font-size:26px;margin-bottom:4px}
+.card .lead{color:var(--muted);margin:0 0 24px}
+.tip{background:var(--sand);border-radius:18px;padding:20px;position:sticky;top:20px;font-size:14px}
+.tip>b{display:block;margin-bottom:6px}
+.tip ul{padding-left:18px;margin:8px 0 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.f{margin-bottom:18px}
+.f label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.f label .req{color:var(--red)}
+.f .hint{font-size:12px;color:var(--muted);margin-top:4px}
+input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;color:var(--navy);background:#fff}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(197,168,128,.45);border-color:var(--gold)}
+textarea{min-height:84px;resize:vertical}
+.sec{border-top:1px solid var(--line);padding-top:22px;margin-top:8px}
+.sec h3{font-size:18px;margin-bottom:4px}
+.sec p.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;padding:6px;background:#fff}
+.tags span{background:var(--sand);border-radius:999px;padding:4px 10px;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+.tags span button{border:0;background:none;padding:0;color:var(--muted);font-size:14px}
+.tags input{border:0;flex:1;min-width:140px;padding:6px}
+.tags input:focus{outline:none}
+.logo{display:flex;gap:14px;align-items:center}
+.logo .box{width:86px;height:86px;border:1.5px dashed var(--line);border-radius:16px;display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:12px;text-align:center;background:var(--cream)}
+.logo img{max-width:100%;max-height:100%}
+.item{border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;background:var(--cream);position:relative}
+.item .head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.item .head b{font-size:14px}
+.item .f{margin-bottom:12px}
+.ctrl{display:flex;gap:4px}
+.ctrl button{border:1px solid var(--line);background:#fff;border-radius:8px;width:30px;height:30px;font-size:14px;color:var(--muted)}
+.ctrl button:hover{color:var(--navy);border-color:var(--gold)}
+.add{width:100%;border:1.5px dashed var(--line);background:#fff;border-radius:14px;padding:12px;color:var(--navy);font-weight:500}
+.add:hover{border-color:var(--gold)}
+.types{display:flex;gap:4px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px}
+.types button{border:0;background:transparent;border-radius:8px;padding:5px 10px;font-size:13px;color:var(--muted)}
+.types button.on{background:var(--navy);color:#fff}
+.step-item{border-left:4px solid var(--navy)}
+.step-item.t-decision{border-left-color:var(--amber)}
+.step-item.t-warning{border-left-color:var(--red);background:#fff7f7}
+.step-item.t-checkpoint{border-left-color:var(--green)}
+.badge{width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:600;font-size:13px;flex:none}
+.t-decision .badge{background:var(--amber)}.t-warning .badge{background:var(--red)}.t-checkpoint .badge{background:var(--green)}
+.yes textarea{background:#f0faf4;border-color:#c6e9d4}.no textarea{background:#fff2f2;border-color:#f3cccc}
+.warnbox{background:#fff8e6;border:1px solid #f1dfae;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:16px}
+.nav{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:24px;padding-top:20px}
+.empty{color:var(--muted);text-align:center;padding:20px;font-size:14px}
+.score{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.bar{flex:1;height:10px;background:var(--sand);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold)}
+.miss{list-style:none;padding:0;margin:0 0 20px}
+.miss li{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:10px;background:var(--cream);margin-bottom:6px;font-size:14px}
+.miss li.ok{color:var(--green)}
+.miss li button{border:0;background:none;color:var(--gold-d);font-weight:600;font-size:13px}
+.export{display:flex;gap:8px;flex-wrap:wrap;background:var(--sand);border-radius:16px;padding:16px;margin-bottom:20px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(31,43,71,.45);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
+.modal.open{display:flex}
+.modal .box{background:#fff;border-radius:20px;max-width:720px;width:100%;padding:26px}
+.modal h3{margin-bottom:14px;font-size:22px}
+.tpl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tpl button{text-align:left;border:1px solid var(--line);background:var(--cream);border-radius:14px;padding:14px;font-size:14px}
+.tpl button:hover{border-color:var(--gold)}
+.tpl button small{display:block;color:var(--muted);margin-top:4px}
+.lib li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.lib{list-style:none;padding:0;margin:0}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:60}
+.toast.show{opacity:1}
+/* ---------- document ---------- */
+.doc{background:#fff;color:#1f2937;font-size:13.5px;line-height:1.55;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.doc .cover{background:var(--accent);color:#fff;padding:34px 40px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.doc .cover img{max-height:56px;max-width:180px;background:#fff;border-radius:8px;padding:6px}
+.doc .cover .co{font-size:20px;font-weight:700}
+.doc .cover .lbl{letter-spacing:.2em;font-size:11px;font-weight:700;opacity:.85;text-align:right}
+.doc .titleblk{padding:28px 40px 10px}
+.doc .titleblk h1{font-size:28px;color:#111827;margin-bottom:6px}
+.doc .titleblk .purpose{color:#4b5563}
+.doc .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 20px;padding:18px 40px;margin:0 40px;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
+.doc .meta div small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;font-weight:700}
+.doc .body{padding:10px 40px 30px}
+.doc h2.ds{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:#111827;border-left:4px solid var(--accent);padding-left:10px;margin:26px 0 12px;page-break-after:avoid}
+.doc h4{margin:12px 0 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}
+.doc p{margin:0 0 8px;white-space:pre-wrap}
+.doc table{width:100%;border-collapse:collapse;margin:6px 0 10px;font-size:12.5px}
+.doc th{text-align:left;background:#f3f4f6;padding:7px 8px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#4b5563}
+.doc td{padding:7px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top;white-space:pre-wrap}
+.doc ul{margin:4px 0 10px;padding-left:20px}
+.doc .dstep{border:1px solid #e5e7eb;border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin-bottom:10px;page-break-inside:avoid}
+.doc .dstep.t-decision{border-left-color:#d69e2e}.doc .dstep.t-warning{border-left-color:#e53e3e;background:#fff5f5}.doc .dstep.t-checkpoint{border-left-color:#38a169;background:#f0fff4}
+.doc .dstep .h{display:flex;gap:10px;align-items:baseline}
+.doc .dstep .num{font-weight:700;color:var(--accent);min-width:24px}
+.doc .dstep .ty{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;margin-left:auto;white-space:nowrap}
+.doc .dstep .sm{font-size:12px;color:#4b5563;margin-top:4px}
+.doc .yn{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.doc .yn div{border-radius:6px;padding:6px 8px;font-size:12px}
+.doc .yn .y{background:#f0fff4}.doc .yn .n{background:#fff5f5}
+.doc .note{background:#fffbeb;border-radius:6px;padding:6px 8px;font-size:12px;margin-top:6px}
+.doc .chk li{list-style:none;margin-left:-20px}
+.doc .chk li:before{content:"☐  ";font-size:14px}
+.doc .foot{text-align:center;color:#9ca3af;font-size:11px;padding:16px;border-top:1px solid #e5e7eb}
+#printArea{display:none}
+@media (max-width:860px){.grid{grid-template-columns:1fr}.tip{position:static}.row,.row3{grid-template-columns:1fr}.doc .meta{grid-template-columns:1fr 1fr;margin:0 20px;padding:14px 0}.doc .body,.doc .titleblk{padding-left:20px;padding-right:20px}.tpl{grid-template-columns:1fr}.card{padding:20px}}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff}
+  .app,.modal,.toast{display:none!important}
+  #printArea{display:block}
+  .doc{border:0;border-radius:0;font-size:12px}
+  .doc .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .doc *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><div class="ic">✦</div><div><b>SOP-generaator</b><small>Põhjalik tööjuhend, millega teine inimene saab töö üle võtta</small></div></div>
+    <div class="topbtns">
+      <span class="save" id="saveState"></span>
+      <button class="btn sm" data-act="templates">▦ Vali mall</button>
+      <button class="btn sm" data-act="library">☰ Minu SOP-id</button>
+      <button class="btn sm" data-act="saveLib">＋ Salvesta</button>
+      <button class="btn sm" data-act="new">Uus SOP</button>
+    </div>
+  </header>
+  <nav class="steps" id="stepNav"></nav>
+  <main class="grid">
+    <section class="card" id="stepCard"></section>
+    <aside class="tip" id="tipBox"></aside>
+  </main>
+</div>
+
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+<div id="printArea"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<input type="file" id="logoFile" accept="image/*" hidden>
+
+<script>
+(function(){
+'use strict';
+var KEY='sop-gen-v2-current', LIB='sop-gen-v2-library';
+var STEPS=[
+ {id:'yld',name:'Üldinfo'},
+ {id:'aeg',name:'Ajastus'},
+ {id:'ligi',name:'Ligipääsud'},
+ {id:'auto',name:'Automatiseeringud'},
+ {id:'kont',name:'Kontaktid'},
+ {id:'teg',name:'Tegevuskava'},
+ {id:'kontr',name:'Kontroll'},
+ {id:'eksp',name:'Eelvaade & eksport'}
+];
+var TYPES={action:'Tegevus',decision:'Otsus',warning:'Hoiatus',checkpoint:'Kontrollpunkt'};
+var ROLES=['Virtuaalassistent (VA)','Turundusspetsialist','Sisuhaldur','Projektijuht','Juht / Asutaja','Klienditeenindaja','Müügispetsialist','Arendaja','Raamatupidaja'];
+var FREQ=['Igapäevane','Iganädalane','Kaks korda kuus','Igakuine','Kord kvartalis','Kord aastas','Vajaduse järgi','Ühekordne'];
+var CHANNELS=['E-mail','Slack','WhatsApp','Messenger','Teams','Trello/Asana kommentaarid','Telefon','Muu'];
+var MEET=['Puudub (vaid kirjalik)','Vastavalt vajadusele','Kord nädalas','Kord kahe nädala jooksul','Kord kuus'];
+var RTYPES=['Tööriist / konto','Kaust / failid','Dokument / juhend','Paroolihaldur','Veebileht / admin','Muu'];
+var PLATFORMS=['Make.com','Zapier','WordPress (plugin/cron)','WooCommerce','Klaviyo','MailerLite / Brevo','Google Apps Script','Kalendri meeldetuletus','Muu'];
+
+function blank(){return{
+ meta:{logo:'',company:'',color:'#1F2B47',title:'',sopId:'',version:'v1.0',updated:today(),client:'',purpose:'',scopeIn:'',scopeOut:'',ownerName:'',ownerRole:'',backupName:'',backupRole:'',approver:'',tools:[]},
+ time:{frequency:'',schedule:'',deadline:'',duration:'',unit:'minutit',trigger:'',related:''},
+ access:{materials:'',location:'',preconditions:[''],resources:[]},
+ auto:{list:[],manual:''},
+ comm:{channel:'',channelOther:'',meetings:'',handover:'',response:'',hours:'',escalation:'',contacts:[]},
+ steps:[],
+ finish:{checks:[''],mistakes:'',trouble:[],output:'',notes:''}
+};}
+function today(){var d=new Date();return d.toISOString().slice(0,10);}
+function uid(){return Math.random().toString(36).slice(2,9);}
+
+var S=load()||blank(), cur=0;
+try{var c=localStorage.getItem(KEY+'-step');if(c)cur=Math.min(+c,STEPS.length-1)||0;}catch(e){}
+
+function load(){try{var r=localStorage.getItem(KEY);if(!r)return null;return merge(blank(),JSON.parse(r));}catch(e){return null;}}
+function merge(a,b){for(var k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')merge(a[k],b[k]);else a[k]=b[k];}return a;}
+var saveT;
+function save(){
+ setSave('Salvestab…');clearTimeout(saveT);
+ saveT=setTimeout(function(){try{localStorage.setItem(KEY,JSON.stringify(S));localStorage.setItem(KEY+'-step',cur);setSave('✓ Salvestatud brauserisse');}catch(e){setSave('Brauser ei luba salvestada — ekspordi JSON');}},400);
+}
+function setSave(t){document.getElementById('saveState').textContent=t;}
+function toast(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2200);}
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function get(path){return path.split('.').reduce(function(o,k){return o==null?o:o[k];},S);}
+function set(path,v){var ks=path.split('.'),o=S;for(var i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v;}
+
+/* ---------- field helpers ---------- */
+function inp(path,label,ph,o){o=o||{};var v=get(path);
+ return '<div class="f"><label>'+esc(label)+(o.req?' <span class="req">*</span>':'')+'</label><input type="'+(o.type||'text')+'" data-k="'+path+'" value="'+esc(v)+'" placeholder="'+esc(ph||'')+'"'+(o.list?' list="'+o.list+'"':'')+'>'+(o.hint?'<div class="hint">'+esc(o.hint)+'</div>':'')+'</div>';}
+function ta(path,label,ph,o){o=o||{};
+ return '<div class="f'+(o.cls?' '+o.cls:'')+'"><label>'+esc(label)+'</label><textarea data-k="'+path+'" placeholder="'+esc(ph||'')+'"'+(o.rows?' style="min-height:'+o.rows*24+'px"':'')+'>'+esc(get(path))+'</textarea>'+(o.hint?'<div class="hint">'+esc(o.hint)+'</div>':'')+'</div>';}
+function sel(path,label,opts,ph){var v=get(path);
+ return '<div class="f"><label>'+esc(label)+'</label><select data-k="'+path+'"><option value="">'+esc(ph||'Vali…')+'</option>'+opts.map(function(x){return '<option'+(x===v?' selected':'')+'>'+esc(x)+'</option>';}).join('')+'</select></div>';}
+function datalist(id,arr){return '<datalist id="'+id+'">'+arr.map(function(x){return '<option value="'+esc(x)+'">';}).join('')+'</datalist>';}
+function ctrl(list,i,len){return '<div class="ctrl"><button title="Üles" data-act="up" data-list="'+list+'" data-i="'+i+'"'+(i===0?' disabled':'')+'>↑</button><button title="Alla" data-act="down" data-list="'+list+'" data-i="'+i+'"'+(i===len-1?' disabled':'')+'>↓</button><button title="Kopeeri" data-act="dup" data-list="'+list+'" data-i="'+i+'">⧉</button><button title="Kustuta" data-act="del" data-list="'+list+'" data-i="'+i+'">✕</button></div>';}
+function simpleList(path,ph,addLabel){var arr=get(path);
+ return arr.map(function(v,i){return '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center"><span style="color:var(--muted);width:20px">'+(i+1)+'.</span><input type="text" data-k="'+path+'.'+i+'" value="'+esc(v)+'" placeholder="'+esc(ph)+'"><button class="btn sm ghost" data-act="delS" data-list="'+path+'" data-i="'+i+'" title="Kustuta">✕</button></div>';}).join('')+'<button class="btn sm" data-act="addS" data-list="'+path+'">＋ '+esc(addLabel)+'</button>';}
+
+/* ---------- steps ---------- */
+var TIPS={
+ yld:'<b>Mõtle asendajale</b>Kirjuta nii, nagu loeks seda inimene, kes pole sinu tööd kunagi näinud. Kes vastutab praegu, kes asendab ja kes annab lõpliku kinnituse?<ul><li>Ulatus ütleb, mis selle protsessi juurde <i>ei</i> kuulu, see hoiab ära segaduse.</li></ul>',
+ aeg:'<b>Millal ja miks?</b>Ülevõtja peab teadma, mis protsessi käivitab (kuupäev, kliendi kiri, tellimus) ja mis on hiliseim tähtaeg.',
+ ligi:'<b>Ära kirjuta siia paroole</b>Kirjuta ainult, <i>kus</i> ligipääs asub (nt LastPassi kaust „Kliendid / Kalastuskunn“) ja kes saab ligipääsu anda.<ul><li>Iga tööriista kohta üks rida.</li></ul>',
+ auto:'<b>Mis toimub iseenesest?</b>Automatiseeringud on asendaja jaoks kõige suurem pimeala. Kirjuta üles, kus neid näha saab ja mida teha, kui mõni katki läheb.',
+ kont:'<b>Kellele helistada, kui midagi põleb?</b>Eskalatsioon ja kontaktid säästavad ülevõtja aega kõige rohkem. Lisa ka, millal kellegi poole pöörduda.',
+ teg:'<b>Hea reegel</b>Üks samm = üks tegevus. Kui samm läheb liiga pikaks, jaga see kaheks.<ul><li><b>Otsus</b> – kahe teega hargnemine</li><li><b>Hoiatus</b> – koht, kus on lihtne eksida</li><li><b>Kontrollpunkt</b> – vahetulemus, mis peab paigas olema</li></ul>',
+ kontr:'<b>Pea meeles</b>Ära delegeeri segadust! Kui sa ei suuda protsessi ise kirja panna, ei suuda keegi teine seda ka edukalt täita.',
+ eksp:'<b>Valmis?</b>Vaata täielikkuse kontroll üle. PDF-i saad, kui vajutad „Prindi / salvesta PDF“ ja valid printeriks „Salvesta PDF-ina“.<ul><li>JSON-fail on SOP-i koopia, mida saad hiljem uuesti avada ja muuta.</li></ul>'
+};
+
+function vYld(){var m=S.meta;
+ return '<h2>Üldinfo ja bränding</h2><p class="lead">Protsessi põhiandmed. Need kuvatakse juhendi päises.</p>'+
+ '<div class="f"><label>Ettevõtte logo</label><div class="logo"><div class="box">'+(m.logo?'<img src="'+m.logo+'" alt="">':'Logo')+'</div><div style="display:flex;flex-direction:column;gap:6px"><button class="btn sm" data-act="logo">⤒ Lae üles logo</button>'+(m.logo?'<button class="btn sm ghost danger" data-act="logoDel">Eemalda</button>':'')+'</div><div class="f" style="margin:0 0 0 auto"><label>Juhendi värv</label><input type="color" data-k="meta.color" value="'+esc(m.color)+'" style="width:60px;height:40px;border:1px solid var(--line);border-radius:10px;padding:2px"></div></div></div>'+
+ '<div class="row">'+inp('meta.company','Ettevõtte nimi','nt Lunovia OÜ')+inp('meta.client','Klient / projekt','nt Kalastuskunn')+'</div>'+
+ inp('meta.title','Protsessi pealkiri','nt Kodulehe igakuine hooldus',{req:1})+
+ '<div class="row3">'+inp('meta.sopId','SOP kood','nt SOP-WEB-01')+inp('meta.version','Versioon','v1.0')+inp('meta.updated','Viimati uuendatud','',{type:'date'})+'</div>'+
+ ta('meta.purpose','Eesmärk','Milline on protsessi lõpptulemus ja miks see oluline on…')+
+ '<div class="row">'+ta('meta.scopeIn','Mis kuulub protsessi juurde','nt pluginate uuendused, varukoopia, kiiruse kontroll')+ta('meta.scopeOut','Mis EI kuulu juurde','nt sisu kirjutamine, disainimuudatused')+'</div>'+
+ '<div class="sec"><h3>Vastutajad</h3><p class="sub">Kes teeb, kes asendab ja kes kinnitab.</p>'+
+ '<div class="row">'+inp('meta.ownerName','Vastutaja nimi','nt Mari Maasikas')+inp('meta.ownerRole','Vastutaja roll','Vali või kirjuta',{list:'roles'})+'</div>'+
+ '<div class="row">'+inp('meta.backupName','Asendaja nimi','Kes teeb, kui vastutaja puudub?')+inp('meta.backupRole','Asendaja roll','',{list:'roles'})+'</div>'+
+ inp('meta.approver','Kinnitaja / protsessi omanik','Kes annab lõpliku heakskiidu?')+'</div>'+
+ '<div class="sec">'+tagsField('meta.tools','Tööriistad','nt WordPress, Canva, Notion… (vajuta Enter)')+'</div>'+datalist('roles',ROLES);}
+
+function tagsField(path,label,ph){var arr=get(path);
+ return '<div class="f"><label>'+esc(label)+'</label><div class="tags">'+arr.map(function(t,i){return '<span>'+esc(t)+'<button data-act="tagDel" data-list="'+path+'" data-i="'+i+'">×</button></span>';}).join('')+'<input type="text" data-tags="'+path+'" placeholder="'+esc(ph)+'"></div><div class="hint">Vajuta Enter või koma iga tööriista lisamiseks</div></div>';}
+
+function vAeg(){
+ return '<h2>Ajastus ja käivitus</h2><p class="lead">Millal protsess toimub, mis selle käivitab ja kui kaua see aega võtab.</p>'+
+ '<div class="row">'+sel('time.frequency','Sagedus',FREQ,'Vali sagedus')+inp('time.schedule','Täpne aeg','nt iga kuu 1. tööpäev kell 9–11')+'</div>'+
+ '<div class="row">'+'<div class="f"><label>Hinnanguline ajakulu</label><div style="display:flex;gap:8px"><input type="number" min="0" data-k="time.duration" value="'+esc(S.time.duration)+'" placeholder="nt 45"><select data-k="time.unit" style="max-width:120px">'+['minutit','tundi','päeva'].map(function(u){return '<option'+(u===S.time.unit?' selected':'')+'>'+u+'</option>';}).join('')+'</select></div></div>'+inp('time.deadline','Tähtaeg','nt hiljemalt kuu 5. kuupäevaks')+'</div>'+
+ ta('time.trigger','Mis käivitab protsessi?','nt kalendri meeldetuletus, kliendi e-kiri, uus tellimus WooCommerce\'is…')+
+ ta('time.related','Seotud protsessid / SOP-id','nt enne seda: SOP-WEB-02 Varukoopia; pärast: kuuraporti saatmine',{rows:3});}
+
+function vLigi(){var r=S.access.resources;
+ return '<h2>Ligipääsud ja ressursid</h2><p class="lead">Kõik, mida on vaja, et tööd üldse alustada. Mida täpsemalt kirjeldad, seda vähem küsimusi hiljem.</p>'+
+ '<div class="warnbox">⚠ <b>Ära kirjuta paroole.</b> Viita turvalisele kohale, näiteks paroolihaldurile.</div>'+
+ '<div class="sec" style="border:0;padding-top:0;margin-top:0"><h3>Tööriistad, kontod ja kaustad</h3><p class="sub">Iga rida: mis see on, kus asub, kuidas ligi pääseb ja kes ligipääsu annab.</p>'+
+ (r.length?'':'<div class="empty">Ühtegi ressurssi pole lisatud.</div>')+
+ r.map(function(x,i){var p='access.resources.'+i;return '<div class="item"><div class="head"><b>Ressurss '+(i+1)+'</b>'+ctrl('access.resources',i,r.length)+'</div><div class="row">'+inp(p+'.name','Nimi','nt WordPressi admin')+sel(p+'.type','Tüüp',RTYPES)+'</div><div class="row">'+inp(p+'.where','Link / asukoht','nt kalastuskunn.ee/wp-admin')+inp(p+'.access','Kuidas ligi pääseb','nt LastPass › Kliendid › Kalastuskunn')+'</div>'+inp(p+'.owner','Kes annab ligipääsu','nt Marko (klient)')+'</div>';}).join('')+
+ '<button class="add" data-act="add" data-list="access.resources">＋ Lisa ressurss</button></div>'+
+ '<div class="sec">'+ta('access.materials','Vajalikud materjalid ja info','nt valmis tekstidokument, fotod pilves, tootekirjeldused Excelis…',{hint:'Mida peab täitjal enne alustamist käes olema?'})+
+ ta('access.location','Failide asukoht ja struktuur','nt Google Drive › Kliendid › Kalastuskunn › 2026; failinimed kujul KK-AAAA-teema')+
+ '<div class="f"><label>Eeltingimused</label>'+simpleList('access.preconditions','nt Domeen peab olema aktiivne','Lisa eeltingimus')+'<div class="hint">Mis peab olema tehtud või olemas enne selle protsessi algust?</div></div></div>';}
+
+function vAuto(){var a=S.auto.list;
+ return '<h2>Automatiseeringud</h2><p class="lead">Mis toimub automaatselt taustal? Ülevõtja peab teadma, mida mitte käsitsi teha ja mida kontrollida.</p>'+
+ (a.length?'':'<div class="empty">Automatiseeringuid pole lisatud. Kui midagi ei toimu automaatselt, jäta see tühjaks.</div>')+
+ a.map(function(x,i){var p='auto.list.'+i;return '<div class="item"><div class="head"><b>Automatiseering '+(i+1)+'</b>'+ctrl('auto.list',i,a.length)+'</div><div class="row">'+inp(p+'.name','Nimi','nt Uue tellimuse teavitus')+inp(p+'.platform','Platvorm','Vali või kirjuta',{list:'plat'})+'</div><div class="row">'+inp(p+'.trigger','Käivitaja / ajastus','nt iga päev 08:00 või uus tellimus')+inp(p+'.monitor','Kus näha / kontrollida','nt Make › Scenarios › History')+'</div>'+ta(p+'.does','Mida see teeb','nt saadab tellimuse info Google Sheetsi ja Slacki',{rows:2})+ta(p+'.broken','Mida teha, kui see ei tööta','nt kontrolli ühendust, käivita käsitsi, teavita Sidneit',{rows:2})+'</div>';}).join('')+
+ '<button class="add" data-act="add" data-list="auto.list">＋ Lisa automatiseering</button>'+
+ '<div class="sec">'+ta('auto.manual','Mis on endiselt käsitsi?','nt arve kinnitamine, kliendile vastamine…',{hint:'Aitab aru saada, kus automaatika lõpeb ja inimene algab.'})+'</div>'+datalist('plat',PLATFORMS);}
+
+function vKont(){var c=S.comm.contacts;
+ return '<h2>Kontaktid ja kommunikatsioon</h2><p class="lead">Kuidas suhtlus käib, kellega ühendust võtta ja kuidas tööd üle antakse.</p>'+
+ '<div class="row">'+sel('comm.channel','Peamine suhtluskanal',CHANNELS,'Vali kanal')+sel('comm.meetings','Kõnede/koosolekute vajadus',MEET,'Vali sagedus')+'</div>'+
+ (S.comm.channel==='Muu'?inp('comm.channelOther','Muu kanal','Kirjuta kanal'):'')+
+ '<div class="row">'+inp('comm.response','Oodatav vastamise aeg','nt 24h jooksul tööpäevadel')+inp('comm.hours','Tööaeg / ajavöönd','nt E–R 9–17 (Eesti aeg)')+'</div>'+
+ ta('comm.handover','Töö vastuvõtt ja kinnitamine','nt Kui töö on valmis, saadan lingi Slackis ja ootan kinnitust 24h jooksul…')+
+ ta('comm.escalation','Eskalatsioon: kui midagi läheb valesti','nt Leht maas › kohe telefon Sidneile; makse ei tööta › teavita klienti + majutus…')+
+ '<div class="sec"><h3>Kontaktid</h3><p class="sub">Kliendid, kolleegid, teenusepakkujad (majutus, arendaja jne).</p>'+
+ (c.length?'':'<div class="empty">Kontakte pole lisatud.</div>')+
+ c.map(function(x,i){var p='comm.contacts.'+i;return '<div class="item"><div class="head"><b>Kontakt '+(i+1)+'</b>'+ctrl('comm.contacts',i,c.length)+'</div><div class="row">'+inp(p+'.name','Nimi','nt Marko Tamm')+inp(p+'.role','Roll / ettevõte','nt klient, Kalastuskunn')+'</div><div class="row">'+inp(p+'.contact','Kontakt','e-post või telefon')+inp(p+'.when','Millal pöörduda','nt sisu kinnitamine, arved')+'</div></div>';}).join('')+
+ '<button class="add" data-act="add" data-list="comm.contacts">＋ Lisa kontakt</button></div>';}
+
+function vTeg(){var st=S.steps;
+ return '<h2>Tegevuskava</h2><p class="lead">Kirjelda protsess samm-sammult. Iga samm peaks olema üks selge tegevus.</p>'+
+ (st.length?'':'<div class="item" style="text-align:center;padding:30px"><div class="empty">Ühtegi sammu pole veel lisatud.</div><button class="btn primary" data-act="add" data-list="steps">＋ Lisa esimene samm</button></div>')+
+ st.map(function(x,i){var p='steps.'+i;
+  return '<div class="item step-item t-'+x.type+'"><div class="head"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="badge">'+(i+1)+'</span><div class="types">'+Object.keys(TYPES).map(function(t){return '<button data-act="type" data-i="'+i+'" data-t="'+t+'" class="'+(x.type===t?'on':'')+'">'+TYPES[t]+'</button>';}).join('')+'</div></div>'+ctrl('steps',i,st.length)+'</div>'+
+  inp(p+'.title',x.type==='decision'?'Küsimus / otsus':'Sammu pealkiri',x.type==='decision'?'nt Kas kõik pluginad uuenesid veatult?':'nt Tee varukoopia')+
+  ta(p+'.desc','Detailne kirjeldus','Selgita täpsemalt, mida ja kuidas teha.',{rows:3})+
+  (x.type==='decision'?'<div class="row"><div class="yes">'+ta(p+'.yes','Kui JAH','nt Mine sammu 5 juurde',{rows:2})+'</div><div class="no">'+ta(p+'.no','Kui EI','nt Taasta varukoopia ja teavita',{rows:2})+'</div></div>':'')+
+  '<div class="row3">'+inp(p+'.tool','Tööriist','nt UpdraftPlus')+inp(p+'.link','Juhend / video link','nt Loomi link',{type:'url'})+inp(p+'.time','Ajakulu','nt 10 min')+'</div>'+
+  ta(p+'.tip',x.type==='warning'?'Hoiatuse sõnum':'Vihje / hoiatus (vabatahtlik)',x.type==='warning'?'Selgita ohtu või tagajärge':'nt Ära uuenda WooCommerce\'i enne varukoopiat!',{rows:2})+
+  '</div>';}).join('')+
+ (st.length?'<button class="add" data-act="add" data-list="steps">＋ Lisa uus samm</button>':'');}
+
+function vKontr(){var t=S.finish.trouble;
+ return '<h2>Kontroll ja lõpetamine</h2><p class="lead">Millal on töö valmis, mida vältida ja mida teha, kui midagi ei tööta.</p>'+
+ '<div class="f"><label>Millal on töö valmis ja korrektne?</label><div class="hint" style="margin:0 0 8px">Punktid, mida täitja peab enne üleandmist ise üle kontrollima.</div>'+simpleList('finish.checks','nt Avaleht ja kassa töötavad','Lisa kontrollpunkt')+'</div>'+
+ '<div class="sec">'+ta('finish.mistakes','Levinud vead, mida vältida','nt Ära unusta piltidele alt-tekste lisamast…')+'</div>'+
+ '<div class="sec"><h3>Tõrkeotsing</h3><p class="sub">Tüüpilised probleemid ja nende lahendused.</p>'+
+ (t.length?'':'<div class="empty">Tõrkeid pole lisatud.</div>')+
+ t.map(function(x,i){var p='finish.trouble.'+i;return '<div class="item"><div class="head"><b>Probleem '+(i+1)+'</b>'+ctrl('finish.trouble',i,t.length)+'</div><div class="row">'+ta(p+'.problem','Probleem','nt Pärast uuendust valge ekraan',{rows:2})+ta(p+'.solution','Lahendus','nt Lülita viimane plugin FTP kaudu välja',{rows:2})+'</div></div>';}).join('')+
+ '<button class="add" data-act="add" data-list="finish.trouble">＋ Lisa probleem ja lahendus</button></div>'+
+ '<div class="sec">'+ta('finish.output','Tulemus ja üleandmine','nt Kuuraport saadetakse kliendile e-postiga; märgi ülesanne Asanas tehtuks')+
+ ta('finish.notes','Märkmed ülevõtjale','Kõik muu, mida asendaja peaks teadma: kliendi eripärad, ajalugu, „ära kunagi tee X“…')+'</div>';}
+
+function checks(){var m=S.meta,a=S.access,t=S.time;
+ return [
+  {ok:!!m.title,l:'Protsessi pealkiri',s:0},
+  {ok:!!m.purpose,l:'Eesmärk',s:0},
+  {ok:!!m.ownerName,l:'Vastutaja',s:0},
+  {ok:!!m.backupName,l:'Asendaja',s:0},
+  {ok:!!t.frequency,l:'Sagedus',s:1},
+  {ok:!!t.trigger,l:'Mis käivitab protsessi',s:1},
+  {ok:a.resources.length>0,l:'Vähemalt üks ligipääs/ressurss',s:2},
+  {ok:a.resources.every(function(r){return r.access;}),l:'Igal ressursil on kirjas, kuidas ligi pääseb',s:2},
+  {ok:S.auto.list.every(function(x){return x.broken;}),l:'Igal automatiseeringul on kirjas, mida teha, kui see katki läheb',s:3},
+  {ok:S.comm.contacts.length>0,l:'Vähemalt üks kontakt',s:4},
+  {ok:!!S.comm.escalation,l:'Eskalatsioon (kui midagi läheb valesti)',s:4},
+  {ok:S.steps.length>=3,l:'Tegevuskavas vähemalt 3 sammu',s:5},
+  {ok:S.steps.every(function(x){return x.type!=='decision'||(x.yes&&x.no);}),l:'Igal otsusel on JAH ja EI tee',s:5},
+  {ok:S.finish.checks.filter(Boolean).length>0,l:'Valmisoleku kontrollpunktid',s:6},
+  {ok:!!S.finish.output,l:'Tulemus ja üleandmine',s:6}
+ ];}
+
+function vEksp(){var c=checks(),ok=c.filter(function(x){return x.ok;}).length,pct=Math.round(ok/c.length*100);
+ return '<h2>Eelvaade ja eksport</h2><p class="lead">Vaata üle, mis on puudu, ja laadi alla valmis tööjuhend.</p>'+
+ '<div class="score"><b>'+pct+'%</b><div class="bar"><i style="width:'+pct+'%"></i></div><span style="color:var(--muted);font-size:13px">'+ok+'/'+c.length+' täidetud</span></div>'+
+ '<ul class="miss">'+c.map(function(x){return '<li class="'+(x.ok?'ok':'')+'"><span>'+(x.ok?'✓ ':'○ ')+esc(x.l)+'</span>'+(x.ok?'':'<button data-act="go" data-i="'+x.s+'">Täida →</button>')+'</li>';}).join('')+'</ul>'+
+ '<div class="export"><button class="btn cta" data-act="print">⎙ Prindi / salvesta PDF</button><button class="btn" data-act="exportJson">⤓ Lae alla JSON</button><button class="btn" data-act="importJson">⤒ Ava JSON</button><button class="btn" data-act="copyText">⧉ Kopeeri tekstina</button></div>'+
+ '<div class="doc" id="docPreview">'+docHTML()+'</div>'+
+ '<div style="margin-top:16px"><button class="btn sm ghost danger" data-act="new">↺ Tühjenda ja alusta uut SOP-i</button></div>';}
+
+var VIEWS=[vYld,vAeg,vLigi,vAuto,vKont,vTeg,vKontr,vEksp];
+
+/* ---------- document ---------- */
+function nz(s){return s&&String(s).trim();}
+function para(label,v){return nz(v)?'<h4>'+esc(label)+'</h4><p>'+esc(v)+'</p>':'';}
+function docHTML(){var m=S.meta,t=S.time,a=S.access,au=S.auto,c=S.comm,f=S.finish,n=0;
+ var h='<div style="--accent:'+esc(m.color||'#1F2B47')+'">';
+ h+='<div class="cover"><div>'+(m.logo?'<img src="'+m.logo+'" alt="">':'')+(m.company?'<div class="co"'+(m.logo?' style="margin-top:10px"':'')+'>'+esc(m.company)+'</div>':'')+(m.client?'<div style="opacity:.85;font-size:13px">'+esc(m.client)+'</div>':'')+'</div><div class="lbl">TÖÖJUHEND'+(m.sopId?'<br><span style="letter-spacing:.05em;font-weight:500">'+esc(m.sopId)+'</span>':'')+'</div></div>';
+ h+='<div class="titleblk"><h1>'+esc(m.title||'Nimetu protsess')+'</h1>'+(nz(m.purpose)?'<div class="purpose">'+esc(m.purpose)+'</div>':'')+'</div>';
+ var md=[['Vastutaja',[m.ownerName,m.ownerRole].filter(nz).join(' · ')],['Asendaja',[m.backupName,m.backupRole].filter(nz).join(' · ')],['Kinnitaja',m.approver],['Versioon',m.version],['Uuendatud',fmtDate(m.updated)],['Sagedus',t.frequency],['Ajakulu',t.duration?t.duration+' '+t.unit:''],['Tähtaeg',t.deadline]].filter(function(x){return nz(x[1]);});
+ if(md.length)h+='<div class="meta">'+md.map(function(x){return '<div><small>'+x[0]+'</small>'+esc(x[1])+'</div>';}).join('')+'</div>';
+ h+='<div class="body">';
+ // 1 eesmärk & ulatus
+ var s1=para('Kuulub protsessi juurde',m.scopeIn)+para('Ei kuulu protsessi juurde',m.scopeOut)+(m.tools.length?'<h4>Tööriistad</h4><p>'+esc(m.tools.join(', '))+'</p>':'');
+ if(s1)h+='<h2 class="ds">'+(++n)+'. Ulatus ja tööriistad</h2>'+s1;
+ var s2=para('Täpne aeg',t.schedule)+para('Mis käivitab protsessi',t.trigger)+para('Seotud protsessid',t.related);
+ if(s2)h+='<h2 class="ds">'+(++n)+'. Ajastus ja käivitus</h2>'+s2;
+ var pre=a.preconditions.filter(nz),res=a.resources.filter(function(r){return nz(r.name);});
+ var s3=(res.length?'<table><tr><th>Ressurss</th><th>Tüüp</th><th>Asukoht</th><th>Ligipääs</th><th>Kes annab</th></tr>'+res.map(function(r){return '<tr><td><b>'+esc(r.name)+'</b></td><td>'+esc(r.type)+'</td><td>'+esc(r.where)+'</td><td>'+esc(r.access)+'</td><td>'+esc(r.owner)+'</td></tr>';}).join('')+'</table>':'')+para('Vajalikud materjalid',a.materials)+para('Failide asukoht',a.location)+(pre.length?'<h4>Eeltingimused</h4><ul>'+pre.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'');
+ if(s3)h+='<h2 class="ds">'+(++n)+'. Ligipääsud ja ressursid</h2>'+s3;
+ var al=au.list.filter(function(x){return nz(x.name);});
+ var s4=(al.length?'<table><tr><th>Automatiseering</th><th>Käivitaja</th><th>Mida teeb</th><th>Kus näha</th><th>Kui katki</th></tr>'+al.map(function(x){return '<tr><td><b>'+esc(x.name)+'</b>'+(x.platform?'<br><span style="color:#6b7280">'+esc(x.platform)+'</span>':'')+'</td><td>'+esc(x.trigger)+'</td><td>'+esc(x.does)+'</td><td>'+esc(x.monitor)+'</td><td>'+esc(x.broken)+'</td></tr>';}).join('')+'</table>':'')+para('Käsitsi tehtavad osad',au.manual);
+ if(s4)h+='<h2 class="ds">'+(++n)+'. Automatiseeringud</h2>'+s4;
+ var ch=c.channel==='Muu'?c.channelOther:c.channel,cl=c.contacts.filter(function(x){return nz(x.name);});
+ var s5=para('Peamine suhtluskanal',ch)+para('Koosolekud',c.meetings)+para('Vastamise aeg',c.response)+para('Tööaeg',c.hours)+para('Töö vastuvõtt ja kinnitamine',c.handover)+para('Eskalatsioon',c.escalation)+(cl.length?'<h4>Kontaktid</h4><table><tr><th>Nimi</th><th>Roll</th><th>Kontakt</th><th>Millal pöörduda</th></tr>'+cl.map(function(x){return '<tr><td><b>'+esc(x.name)+'</b></td><td>'+esc(x.role)+'</td><td>'+esc(x.contact)+'</td><td>'+esc(x.when)+'</td></tr>';}).join('')+'</table>':'');
+ if(s5)h+='<h2 class="ds">'+(++n)+'. Suhtlus ja kontaktid</h2>'+s5;
+ var st=S.steps.filter(function(x){return nz(x.title)||nz(x.desc);});
+ if(st.length){h+='<h2 class="ds">'+(++n)+'. Tegevuskava</h2>'+st.map(function(x,i){
+  var extra=[x.tool?'Tööriist: '+esc(x.tool):'',x.time?'Aeg: '+esc(x.time):'',x.link?'Juhend: <a href="'+esc(x.link)+'">'+esc(x.link)+'</a>':''].filter(Boolean).join(' · ');
+  return '<div class="dstep t-'+x.type+'"><div class="h"><span class="num">'+(i+1)+'.</span><b>'+(x.type==='checkpoint'?'☐ ':'')+(x.type==='warning'?'⚠ ':'')+esc(x.title)+'</b><span class="ty">'+TYPES[x.type]+'</span></div>'+(nz(x.desc)?'<p style="margin:6px 0 0 34px">'+esc(x.desc)+'</p>':'')+
+  (x.type==='decision'&&(x.yes||x.no)?'<div class="yn" style="margin-left:34px"><div class="y"><b>Kui JAH:</b> '+esc(x.yes)+'</div><div class="n"><b>Kui EI:</b> '+esc(x.no)+'</div></div>':'')+
+  (nz(x.tip)?'<div class="note" style="margin-left:34px">'+(x.type==='warning'?'⚠ ':'💡 ')+esc(x.tip)+'</div>':'')+
+  (extra?'<div class="sm" style="margin-left:34px">'+extra+'</div>':'')+'</div>';}).join('');}
+ var ck=f.checks.filter(nz),tr=f.trouble.filter(function(x){return nz(x.problem);});
+ var s7=(ck.length?'<h4>Enne üleandmist kontrolli</h4><ul class="chk">'+ck.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'')+para('Levinud vead, mida vältida',f.mistakes);
+ if(s7)h+='<h2 class="ds">'+(++n)+'. Kvaliteedikontroll</h2>'+s7;
+ if(tr.length)h+='<h2 class="ds">'+(++n)+'. Tõrkeotsing</h2><table><tr><th style="width:40%">Probleem</th><th>Lahendus</th></tr>'+tr.map(function(x){return '<tr><td>'+esc(x.problem)+'</td><td>'+esc(x.solution)+'</td></tr>';}).join('')+'</table>';
+ var s9=para('Tulemus ja üleandmine',f.output)+para('Märkmed ülevõtjale',f.notes);
+ if(s9)h+='<h2 class="ds">'+(++n)+'. Üleandmine ja märkmed</h2>'+s9;
+ h+='</div><div class="foot">'+esc([m.title,m.version,'uuendatud '+fmtDate(m.updated)].filter(nz).join(' · '))+'<br>Loodud SOP-generaatoriga · sidneilukka.ee</div></div>';
+ return h;}
+function fmtDate(d){if(!d)return '';var p=d.split('-');return p.length===3?p[2]+'.'+p[1]+'.'+p[0]:d;}
+
+function docText(){var tmp=document.createElement('div');tmp.innerHTML=docHTML();
+ tmp.querySelectorAll('h1,h2,h4,p,li,tr,.dstep .h,.yn div,.note,.sm,.meta div').forEach(function(e){e.insertAdjacentText('afterend','\n');});
+ tmp.querySelectorAll('td,th').forEach(function(e){e.insertAdjacentText('afterend',' | ');});
+ return tmp.textContent.replace(/\n{3,}/g,'\n\n').trim();}
+
+/* ---------- render ---------- */
+function render(){
+ document.getElementById('stepNav').innerHTML=STEPS.map(function(s,i){return '<button data-act="go" data-i="'+i+'" class="'+(i===cur?'active':i<cur?'done':'')+'"><span class="n">'+(i<cur?'✓':i+1)+'</span>'+s.name+'</button>';}).join('');
+ document.getElementById('stepCard').innerHTML=VIEWS[cur]()+
+  '<div class="nav"><button class="btn ghost" data-act="back"'+(cur===0?' style="visibility:hidden"':'')+'>← Tagasi</button>'+(cur<STEPS.length-1?'<button class="btn primary" data-act="next">Järgmine: '+STEPS[cur+1].name+' →</button>':'<span style="color:var(--muted);font-size:13px">Viimane samm</span>')+'</div>';
+ document.getElementById('tipBox').innerHTML=TIPS[STEPS[cur].id];
+}
+function refreshPreview(){var d=document.getElementById('docPreview');if(d)d.innerHTML=docHTML();}
+
+function newItem(list){
+ if(list==='steps')return{id:uid(),type:'action',title:'',desc:'',tool:'',link:'',time:'',tip:'',yes:'',no:''};
+ if(list==='access.resources')return{name:'',type:'',where:'',access:'',owner:''};
+ if(list==='auto.list')return{name:'',platform:'',trigger:'',does:'',monitor:'',broken:''};
+ if(list==='comm.contacts')return{name:'',role:'',contact:'',when:''};
+ if(list==='finish.trouble')return{problem:'',solution:''};
+ return {};}
+
+/* ---------- events ---------- */
+document.addEventListener('input',function(e){var k=e.target.getAttribute('data-k');if(!k)return;
+ set(k,e.target.value);save();
+ if(k==='meta.color'||cur===7)refreshPreview();});
+document.addEventListener('change',function(e){var k=e.target.getAttribute('data-k');
+ if(k==='comm.channel'){render();}
+ if(e.target.id==='logoFile'){var file=e.target.files[0];if(!file)return;
+  if(file.size>1500000){toast('Logo on liiga suur (max 1,5 MB)');return;}
+  var r=new FileReader();r.onload=function(){S.meta.logo=r.result;save();render();};r.readAsDataURL(file);e.target.value='';}
+ if(e.target.id==='importFile'){var f2=e.target.files[0];if(!f2)return;var r2=new FileReader();
+  r2.onload=function(){try{S=merge(blank(),JSON.parse(r2.result));save();cur=0;render();toast('SOP avatud');}catch(err){toast('See fail ei ole SOP JSON');}};r2.readAsText(f2);e.target.value='';}
+});
+document.addEventListener('keydown',function(e){var p=e.target.getAttribute('data-tags');if(!p)return;
+ if(e.key==='Enter'||e.key===','){e.preventDefault();var v=e.target.value.trim().replace(/,$/,'');e.target.value='';if(v){get(p).push(v);save();render();var el=document.querySelector('[data-tags="'+p+'"]');if(el)el.focus();}}
+ else if(e.key==='Backspace'&&!e.target.value){var arr=get(p);if(arr.length){arr.pop();save();render();var el2=document.querySelector('[data-tags="'+p+'"]');if(el2)el2.focus();}}});
+document.addEventListener('focusout',function(e){var p=e.target.getAttribute&&e.target.getAttribute('data-tags');if(p&&e.target.value.trim()){var arr=get(p),v=e.target.value.trim();arr.push(v);e.target.value='';save();var sp=document.createElement('span');sp.innerHTML=esc(v)+'<button data-act="tagDel" data-list="'+p+'" data-i="'+(arr.length-1)+'">×</button>';e.target.parentNode.insertBefore(sp,e.target);}});
+
+document.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b)return;
+ var a=b.getAttribute('data-act'),list=b.getAttribute('data-list'),i=+b.getAttribute('data-i');
+ switch(a){
+ case 'go':cur=i;closeModal();render();scrollTo(0,0);save();break;
+ case 'next':cur++;render();scrollTo(0,0);save();break;
+ case 'back':cur--;render();scrollTo(0,0);save();break;
+ case 'add':get(list).push(newItem(list));save();render();focusLast(list);break;
+ case 'addS':get(list).push('');save();render();break;
+ case 'delS':var arr=get(list);arr.splice(i,1);if(!arr.length)arr.push('');save();render();break;
+ case 'del':get(list).splice(i,1);save();render();break;
+ case 'dup':var L=get(list),cp=JSON.parse(JSON.stringify(L[i]));if(cp.id)cp.id=uid();L.splice(i+1,0,cp);save();render();break;
+ case 'up':case 'down':var L2=get(list),j=a==='up'?i-1:i+1;if(j<0||j>=L2.length)break;var t=L2[i];L2[i]=L2[j];L2[j]=t;save();render();break;
+ case 'type':S.steps[i].type=b.getAttribute('data-t');save();render();break;
+ case 'tagDel':get(list).splice(i,1);save();render();break;
+ case 'logo':document.getElementById('logoFile').click();break;
+ case 'logoDel':S.meta.logo='';save();render();break;
+ case 'print':document.getElementById('printArea').innerHTML='<div class="doc">'+docHTML()+'</div>';
+  try{window.print();}catch(err){toast('Printimine pole siin lubatud — ava leht eraldi');}break;
+ case 'exportJson':exportJson();break;
+ case 'importJson':document.getElementById('importFile').click();break;
+ case 'copyText':copy(docText(),'Tekst kopeeritud');break;
+ case 'new':askNew();break;
+ case 'doNew':S=blank();cur=0;save();closeModal();render();toast('Uus SOP alustatud');break;
+ case 'templates':showTemplates();break;
+ case 'tpl':applyTemplate(b.getAttribute('data-id'));break;
+ case 'library':showLibrary();break;
+ case 'saveLib':saveToLib();break;
+ case 'openLib':openLib(b.getAttribute('data-id'));break;
+ case 'delLib':delLib(b.getAttribute('data-id'));break;
+ case 'close':closeModal();break;
+ }});
+document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')closeModal();});
+function focusLast(list){setTimeout(function(){var els=document.querySelectorAll('[data-k^="'+list+'."]');if(els.length){var last=els[els.length-1].closest('.item');var f=last&&last.querySelector('input,textarea');if(f){f.focus();f.scrollIntoView({block:'center',behavior:'smooth'});}}},30);}
+
+function fileName(ext){return (S.meta.title||'sop').toLowerCase().replace(/[^a-z0-9äöüõšž]+/gi,'-').replace(/^-|-$/g,'')+'.'+ext;}
+function exportJson(){var data=JSON.stringify(S,null,2);
+ try{var blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=fileName('json');document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);toast('JSON alla laaditud');}
+ catch(e){copy(data,'Allalaadimine pole lubatud — JSON kopeeriti lõikelauale');}}
+function copy(text,msg){try{navigator.clipboard.writeText(text).then(function(){toast(msg);},function(){toast('Kopeerimine ebaõnnestus');});}catch(e){toast('Kopeerimine ebaõnnestus');}}
+
+/* ---------- modal ---------- */
+function openModal(h){document.getElementById('modalBox').innerHTML=h;document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+function askNew(){openModal('<h3>Alusta uut SOP-i?</h3><p>Praegune vorm tühjendatakse. Kui tahad seda alles hoida, vajuta enne „Salvesta“ või lae JSON alla.</p><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button class="btn" data-act="close">Tühista</button><button class="btn primary" data-act="doNew">Jah, alusta uut</button></div>');}
+
+function lib(){try{return JSON.parse(localStorage.getItem(LIB)||'[]');}catch(e){return [];}}
+function setLib(l){try{localStorage.setItem(LIB,JSON.stringify(l));return true;}catch(e){toast('Salvestamine ebaõnnestus (brauser ei luba või logo on liiga suur)');return false;}}
+function saveToLib(){var l=lib(),id=S._libId,now=new Date().toLocaleString('et-EE');
+ if(!S.meta.title){toast('Lisa enne salvestamist protsessi pealkiri');cur=0;render();return;}
+ var ex=id&&l.find(function(x){return x.id===id;});
+ if(!ex){id=uid();S._libId=id;}
+ var entry={id:id,name:S.meta.title,client:S.meta.client,updated:now,data:JSON.parse(JSON.stringify(S))};
+ if(ex)l[l.indexOf(ex)]=entry;else l.unshift(entry);
+ if(setLib(l)){save();toast(ex?'SOP uuendatud':'SOP salvestatud „Minu SOP-id“ alla');}}
+function showLibrary(){var l=lib();
+ openModal('<h3>Minu SOP-id</h3>'+(l.length?'<ul class="lib">'+l.map(function(x){return '<li><div><b>'+esc(x.name)+'</b><br><small style="color:var(--muted)">'+esc([x.client,x.updated].filter(Boolean).join(' · '))+'</small></div><div style="display:flex;gap:6px"><button class="btn sm primary" data-act="openLib" data-id="'+x.id+'">Ava</button><button class="btn sm danger" data-act="delLib" data-id="'+x.id+'">Kustuta</button></div></li>';}).join('')+'</ul>':'<p class="empty">Salvestatud SOP-e veel pole. Vajuta päises „＋ Salvesta“.</p>')+
+ '<p style="font-size:12px;color:var(--muted);margin-top:14px">SOP-id hoitakse ainult selles brauseris. Varukoopiaks või teise arvutisse viimiseks lae alla JSON-fail (viimane samm).</p><div style="text-align:right"><button class="btn" data-act="close">Sulge</button></div>');}
+function openLib(id){var e=lib().find(function(x){return x.id===id;});if(!e)return;S=merge(blank(),e.data);S._libId=id;cur=0;save();closeModal();render();toast('Avatud: '+e.name);}
+function delLib(id){setLib(lib().filter(function(x){return x.id!==id;}));if(S._libId===id)delete S._libId;showLibrary();}
+
+/* ---------- templates ---------- */
+var TPL={
+ web:{n:'Kodulehe igakuine hooldus',d:'WordPress / WooCommerce',f:function(s){var m=s.meta;m.title='Kodulehe igakuine hooldus';m.purpose='Koduleht on turvaline, uuendatud ja töökorras ning klient saab kuu lõpus lühiraporti.';m.ownerRole='Virtuaalassistent (VA)';m.tools=['WordPress','UpdraftPlus','Wordfence','Google Search Console'];m.scopeIn='Varukoopia, pluginate/teema/WP uuendused, turvakontroll, kiiruse kontroll, vormide test, kuuraport';m.scopeOut='Sisu kirjutamine, disainimuudatused, uued funktsioonid';
+  s.time={frequency:'Igakuine',schedule:'Iga kuu esimene tööpäev',deadline:'Hiljemalt kuu 5. kuupäevaks',duration:'60',unit:'minutit',trigger:'Kalendri meeldetuletus',related:''};
+  s.access.resources=[{name:'WordPressi admin',type:'Veebileht / admin',where:'domeen.ee/wp-admin',access:'Paroolihaldur › Kliendid',owner:'Klient'},{name:'Majutuse kontrollpaneel',type:'Tööriist / konto',where:'',access:'Paroolihaldur › Kliendid',owner:'Klient'}];
+  s.access.preconditions=['Värske varukoopia on olemas ja alla laaditav'];
+  s.steps=[st('action','Tee täielik varukoopia','UpdraftPlus › Backup now. Laadi koopia ka pilve.','UpdraftPlus'),st('warning','Kontrolli, kas WooCommerce\'i suuruuendus on tulemas','Suuruuenduse (nt 9.x → 10.x) korral loe muudatuste logi ja tee see eraldi.','','Ära uuenda WooCommerce\'i enne varukoopiat!'),st('action','Uuenda pluginad, teema ja WordPress','Uuenda ükshaaval, alusta väiksematest pluginatest.','WordPress'),st('decision','Kas leht töötab pärast uuendusi?','Ava avaleht, tooteleht, ostukorv ja kontaktivorm.','','',{yes:'Jätka sammuga 5',no:'Taasta varukoopia ja teavita vastutajat'}),st('checkpoint','Testi kontaktivormi ja kassat','Saada testkiri ja tee testtellimus (kui võimalik).'),st('action','Koosta ja saada kuuraport','Mis uuendati, turvaolukord, kiirus, soovitused.','Google Docs')];
+  s.finish.checks=['Avaleht, tooted ja kassa avanevad','Kontaktivorm saadab kirja','Varukoopia on olemas','Kuuraport on saadetud'];
+  s.finish.trouble=[{problem:'Valge ekraan pärast uuendust',solution:'Nimeta viimati uuendatud plugina kaust FTP kaudu ümber või taasta varukoopia.'}];}},
+ news:{n:'Uudiskirja saatmine',d:'Klaviyo / MailerLite',f:function(s){var m=s.meta;m.title='Uudiskirja koostamine ja saatmine';m.purpose='Uudiskiri jõuab õigel ajal õige segmendini, lingid töötavad ja tulemused on fikseeritud.';m.ownerRole='Turundusspetsialist';m.tools=['Klaviyo','Canva','Google Docs'];
+  s.time={frequency:'Iganädalane',schedule:'Teisipäev kell 10:00',deadline:'Mustand kinnitamiseks esmaspäeval 15:00',duration:'2',unit:'tundi',trigger:'Sisuplaan',related:''};
+  s.steps=[st('action','Võta sisuplaanist teema ja tekst','Tekst on Google Docsis kaustas „Uudiskirjad“.'),st('action','Kujunda kiri malli põhjal','Kasuta salvestatud malli, uuenda pildid ja nupud.','Klaviyo'),st('checkpoint','Saada test endale ja kliendile','Kontrolli linke, mobiilivaadet ja teemarida.'),st('decision','Kas klient kinnitas?','','','',{yes:'Ajasta saatmine',no:'Tee parandused ja saada uus test'}),st('action','Ajasta saatmine õigele segmendile','Välista eelmisel nädalal ostnud kliendid, kui nii kokku lepitud.','Klaviyo'),st('action','Märgi tulemused 48h pärast','Avamised, klikid, tulu tabelisse.','Google Sheets')];
+  s.finish.checks=['Kõik lingid töötavad','Teemarida ja eelvaatetekst on olemas','Õige segment on valitud'];}},
+ blog:{n:'Blogipostituse avaldamine',d:'WordPress + SEO',f:function(s){var m=s.meta;m.title='Blogipostituse optimeerimine ja avaldamine';m.purpose='Postitus on SEO-sõbralik, visuaalselt korrektne ja veebis avaldatud.';m.ownerRole='Sisuhaldur';m.tools=['WordPress','Rank Math','Canva','Google Docs'];
+  s.time.frequency='Iganädalane';s.time.duration='45';
+  s.steps=[st('action','Kopeeri tekst WordPressi','Kasuta pealkirjadeks H2/H3, mitte paksu kirja.','WordPress'),st('action','Lisa pildid ja alt-tekstid','Pildid max 200 KB, WebP formaadis.','Canva'),st('action','Täida SEO väljad','Fookusmärksõna, meta pealkiri ja kirjeldus.','Rank Math'),st('checkpoint','Kontrolli eelvaadet mobiilis'),st('action','Avalda ja jaga sotsiaalmeedias','')];
+  s.finish.checks=['Õigekiri kontrollitud','SEO skoor on roheline','Kõigil piltidel on alt-tekst'];s.finish.mistakes='Ära unusta piltidele alt-tekste lisamast. Ära muuda avaldatud postituse URL-i.';}},
+ order:{n:'Tellimuse töötlemine',d:'WooCommerce',f:function(s){var m=s.meta;m.title='Veebipoe tellimuse töötlemine ja saatmine';m.purpose='Tellimus on kinnitatud, pakendatud ja väljastatud kullerile õigeaegselt.';m.ownerRole='Klienditeenindaja';m.tools=['WooCommerce','Omniva','Gmail'];
+  s.time={frequency:'Igapäevane',schedule:'Tööpäeviti kell 9 ja 14',deadline:'Saadetis välja 1 tööpäeva jooksul',duration:'15',unit:'minutit',trigger:'Uus tellimus (e-posti teavitus)',related:''};
+  s.auto.list=[{name:'Tellimuse kinnituskiri',platform:'WooCommerce',trigger:'Uus tellimus',does:'Saadab kliendile kinnituse',monitor:'WooCommerce › Seaded › E-kirjad',broken:'Saada kinnitus käsitsi ja kontrolli SMTP pluginat'}];
+  s.steps=[st('action','Ava uued tellimused','Staatus „Töötlemisel“.','WooCommerce'),st('decision','Kas kõik tooted on laos?','','','',{yes:'Paki tellimus',no:'Kirjuta kliendile ja paku asendust või raha tagastust'}),st('action','Loo pakikaart','','Omniva'),st('action','Muuda staatus „Lõpetatud“','Klient saab automaatse kirja jälgimiskoodiga.')];}}
+};
+function st(type,title,desc,tool,tip,yn){var o=newItem('steps');o.type=type;o.title=title||'';o.desc=desc||'';o.tool=tool||'';o.tip=tip||'';if(yn){o.yes=yn.yes;o.no=yn.no;}return o;}
+function showTemplates(){openModal('<h3>Vali mall</h3><p style="color:var(--muted);margin-top:-8px">Mall täidab vormi näidisandmetega. Ettevõtte nimi, logo ja värv jäävad alles.</p><div class="tpl">'+Object.keys(TPL).map(function(k){return '<button data-act="tpl" data-id="'+k+'"><b>'+TPL[k].n+'</b><small>'+TPL[k].d+'</small></button>';}).join('')+'<button data-act="tpl" data-id="blank"><b>Tühi mall</b><small>Alusta nullist</small></button></div><div style="text-align:right;margin-top:14px"><button class="btn" data-act="close">Sulge</button></div>');}
+function applyTemplate(id){var keep={logo:S.meta.logo,company:S.meta.company,color:S.meta.color,ownerName:S.meta.ownerName,backupName:S.meta.backupName};
+ var s=blank();if(TPL[id])TPL[id].f(s);Object.keys(keep).forEach(function(k){if(keep[k])s.meta[k]=keep[k];});
+ S=s;cur=0;save();closeModal();render();toast('Mall laaditud');}
+
+render();
+})();
+</script>
+</body>
+</html>
